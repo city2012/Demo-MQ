@@ -1,0 +1,100 @@
+server:
+  port: 18080
+
+mybatis:
+  mapper-locations:
+    - classpath:dao/**/*.xml
+    - classpath*:com/**/mapper/*.xml
+    - classpath:mapper/*.xml
+    - classpath*:mapper/**Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 500
+    default-statement-timeout: 80
+
+
+
+spring:
+  application:
+    name: demo-mapstruct
+  datasource:
+    name: defaultDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/tom_play?serverTimezone=UTC"
+    username: root
+    password: 123456
+    initialization-mode: always
+    #    schema: "classpath:schema.sql"
+    #    data: "classpath:data.sql"
+    hikari:
+      pool-name: MapstructHikariCP
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+    type: com.zaxxer.hikari.HikariDataSource
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL5Dialect
+      generate-ddl: true
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5Dialect
+          ddl-auto: update
+          show-sql: true
+  rabbitmq:
+    port: 5672
+    host: localhost
+    username: user
+    password: 123qwe
+    #这个配置是保证提供者确保消息推送到交换机中，不管成不成功，都会回调
+    publisher-confirm-type: correlated
+    #保证交换机能把消息推送到队列中
+    publisher-returns: true
+    virtual-host: /
+    #这个配置是保证消费者会消费消息，手动确认
+    listener:
+      simple:
+        acknowledge-mode: manual
+    template:
+      mandatory: true
+  kafka:
+    bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
+    producer:
+      retries: 2
+    listener:
+      # 设置不监听主题错误，false时，如果broker设置了llow.auto.create.topics = true，生产者发送到未创建主题时，会默认自动创建主题
+      # 且默认创建的主题是单副本单分区的
+      missing-topics-fatal: false
+      concurrency: 3
+    consumer:
+      # 配置消费者消息offset是否自动重置(消费者重连会能够接收最开始的消息)
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      max-poll-records: 500
+
+
+
+kafka:
+  ext:
+    multiple:
+      alarm:
+        bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
+        producer:
+          producer-bean-name: alarmKafkaTemplate
+        consumer:
+          listener-container-factory: alarmListenerContainerFactory
+          listener-group-id: alarm-group-service
+          enable-auto-commit: false
+      notify:
+        bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
+        consumer:
+          listener-container-factory: notifyListenerContainerFactory
+          listener-group-id: notify-group-service
+          listener-batch: true
+    others:
+      - bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
+        producer-bean-name: notifyKafkaTemplate

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class FistQConsumer extends com.yun.practice.midware.rabbit.mq.consumer.BaseConsumer {
+public class FistQConsumer extends BaseConsumer {
 
     @RabbitListener(queues = MessageQueueConstant.FIRST_QUEUE)
     public void onFirstMessage(Message message, Channel channel,

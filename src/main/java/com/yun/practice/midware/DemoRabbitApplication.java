@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
-@MapperScan(basePackages = {"com.yun.practice.midware.rabbit.data.mapper"})
+@MapperScan(basePackages = {"com.yun.practice.midware.data.mapper"})
 @SpringBootApplication
 @EnableEurekaClient
 public class DemoRabbitApplication {

@@ -8,8 +8,8 @@
         <version>2.7.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.yun.practice.midware</groupId>
-    <artifactId>demo_rabbit</artifactId>
+    <groupId>com.yun.practice</groupId>
+    <artifactId>midware.demo_rabbit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>demo_rabbit</name>
     <description>demo_rabbit</description>

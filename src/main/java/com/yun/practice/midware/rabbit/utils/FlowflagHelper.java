@@ -30,7 +30,7 @@ public class FlowflagHelper {
     }
 
     public static Boolean hasFlowtag() {
-        return Objects.nonNull(getFlowFlag());
+        return StringUtils.isNotBlank(getFlowFlag());
     }
 
 

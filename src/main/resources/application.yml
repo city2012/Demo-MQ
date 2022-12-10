@@ -20,8 +20,10 @@ eureka:
     hostname: mq
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip-address}-(${eureka.instance.metadataMap.flowflag}):${server.port}
+    instance-id: ${spring.cloud.client.ip-address}-${eureka.instance.metadataMap.flowflag}:${server.port}
     status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/index.html
+    metadata-map:
+      flowflag:
 
 
 

@@ -154,7 +154,7 @@ public class KafkaConfiguration {
         kafkaTemplate.setDefaultTopic(this.kafkaProperties.getTemplate().getDefaultTopic());
         beanFactory.registerSingleton(producerBeanName, kafkaTemplate);
 
-        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
+//        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
         final String factoryName = Optional.ofNullable(extKafkaProperties.getProducer()).map(ExtKafkaProperties.Producer::getProducerFactory).orElse("");
         if (StringUtils.isNotBlank(factoryName)){
             beanFactory.registerSingleton(factoryName, producerFactory);
@@ -258,7 +258,7 @@ public class KafkaConfiguration {
             factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         }
         beanFactory.registerSingleton(extConsumer.getListenerContainerFactory(), factory);
-        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
+//        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
         beanFactory.applyBeanPostProcessorsAfterInitialization(factory,extConsumer.getListenerContainerFactory());
         log.info("initOtherKafkaConsumer consumerconfig succ :: {}", JsonUtils.toJsonHasNullKey(factory));
         log.info("initOtherKafkaConsumer success! beanName:{},bootstrap.servers:{}", extConsumer.getListenerContainerFactory(), extKafkaProperties.getBootstrapServers());

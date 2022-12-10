@@ -31,15 +31,19 @@ public class MqKafkaAlarmGroupConsumer {
 //            topics = {MessageQueueConstant.ALARM_DEMO_TOPIC},
 //            containerFactory ="${kafka.ext.multiple.alarm.consumer.listener-container-factory}"
 //    )
+    @KafkaListener(
+            topics = {MessageQueueConstant.KAFKA_ALARM_TOPIC},
+            containerFactory ="${kafka.ext.multiple.alarm.consumer.listener-container-factory}"
+    )
     public void onMessage(ConsumerRecord<String, String> record, Acknowledgment ack){
         try {
             final String key = record.key();
             final String message = record.value();
             log.info("{} --消费消息:{} - {}", this.getClass().getSimpleName(), key, message);
 
-            if (Integer.parseInt(key) % 10 == 0){
-                throw new RuntimeException("DO NOT ACK!!!" + key +" :: "+ message);
-            }
+//            if (Integer.parseInt(key) % 10 == 0){
+//                throw new RuntimeException("DO NOT ACK!!!" + key +" :: "+ message);
+//            }
             ack.acknowledge();
         } catch (Exception ex) {
 //            log.error("MqKafkaAlarmGroupConsumer consume :: ", ex);

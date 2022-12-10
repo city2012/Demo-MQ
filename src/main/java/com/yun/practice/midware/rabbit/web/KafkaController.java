@@ -25,8 +25,8 @@ public class KafkaController {
 
         for (int i = 0; i < 60; i++) {
 //            mqKafkaNotifier.sendMessage(KafkaBrokerEnum.ONE.getKafkaSiteName(), MessageQueueConstant.KAFKA_TOPIC_TEST, String.valueOf(i), payload.getPayload()+i);
-//            mqKafkaNotifier.sendMessage(KafkaBrokerEnum.ALARM.getKafkaSiteName(), MessageQueueConstant.ALARM_DEMO_TOPIC, String.valueOf(i), "Alarm :: "+payload.getPayload()+i*2);
-            mqKafkaNotifier.sendMessage(KafkaBrokerEnum.NOTIFY.getKafkaSiteName(), MessageQueueConstant.KAFKA_NOTIFY_TOPIC, String.valueOf(i), "Notify :: "+payload.getPayload()+i*3);
+            mqKafkaNotifier.sendMessage(KafkaBrokerEnum.ALARM.getKafkaSiteName(), MessageQueueConstant.KAFKA_ALARM_TOPIC, String.valueOf(i), "Alarm :: "+payload.getPayload()+i*2);
+//            mqKafkaNotifier.sendMessage(KafkaBrokerEnum.NOTIFY.getKafkaSiteName(), MessageQueueConstant.KAFKA_NOTIFY_TOPIC, String.valueOf(i), "Notify :: "+payload.getPayload()+i*3);
         }
 
 //        for (int i = 0; i < 10; i++) {

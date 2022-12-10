@@ -94,9 +94,9 @@ public abstract class AbsKafkaConsumer {
                 }
             }
 
-            if (Integer.parseInt(key) % 10 == 0){
-                throw new RuntimeException(this.getClass().getSimpleName() + " DO NOT ACK!!!" + key +" :: "+ record.value());
-            }
+//            if (Integer.parseInt(key) % 10 == 0){
+//                throw new RuntimeException(this.getClass().getSimpleName() + " DO NOT ACK!!!" + key +" :: "+ record.value());
+//            }
             log.info("{} --消费消息:{} - {}", this.getClass().getSimpleName(), key, record.value());
 
         }

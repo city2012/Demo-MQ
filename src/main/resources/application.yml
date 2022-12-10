@@ -13,10 +13,29 @@ mybatis:
     default-statement-timeout: 80
 
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:18301/eureka/,http://localhost:18302/eureka/
+    hostname: mq
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}-(${eureka.instance.metadataMap.flowflag}):${server.port}
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui/index.html
+
+
 
 spring:
+  profiles:
+    active: local
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
   application:
-    name: demo-mapstruct
+    name: demo-mq
+  cloud:
+    inetutils:
+      default-ip-address: 127.0.0.1
   datasource:
     name: defaultDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -85,6 +104,7 @@ kafka:
         bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
         producer:
           producer-bean-name: alarmKafkaTemplate
+          producer-factory: alarmProducerFactory
         consumer:
           listener-container-factory: alarmListenerContainerFactory
           listener-group-id: alarm-group-service

@@ -58,6 +58,8 @@ public class KafkaConfiguration {
     private KafkaProperties kafkaProperties;
     @Resource
     private ApplicationContext applicationContext;
+    @Resource
+    private KafkaBeanPostProcessor kafkaBeanPostProcessor;
     @Getter
     @Setter
     @Deprecated
@@ -145,12 +147,19 @@ public class KafkaConfiguration {
             log.info("{} Other producer has been inited!", producerBeanName);
             return;
         }
-
-        KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate(this.getProducerFactory(extKafkaProperties));
+        final ProducerFactory<Object, Object> producerFactory = this.getProducerFactory(extKafkaProperties);
+        KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate(producerFactory);
         messageConverter.ifUnique(kafkaTemplate::setMessageConverter);
         kafkaTemplate.setProducerListener(kafkaProducerListener);
         kafkaTemplate.setDefaultTopic(this.kafkaProperties.getTemplate().getDefaultTopic());
         beanFactory.registerSingleton(producerBeanName, kafkaTemplate);
+
+        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
+        final String factoryName = Optional.ofNullable(extKafkaProperties.getProducer()).map(ExtKafkaProperties.Producer::getProducerFactory).orElse("");
+        if (StringUtils.isNotBlank(factoryName)){
+            beanFactory.registerSingleton(factoryName, producerFactory);
+            beanFactory.applyBeanPostProcessorsAfterInitialization(producerFactory, factoryName);
+        }
         log.info("initOtherKafkaProducer success! beanName:{},bootstrap.servers:{}", producerBeanName, extKafkaProperties.getBootstrapServers());
     }
 
@@ -249,6 +258,8 @@ public class KafkaConfiguration {
             factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         }
         beanFactory.registerSingleton(extConsumer.getListenerContainerFactory(), factory);
+        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
+        beanFactory.applyBeanPostProcessorsAfterInitialization(factory,extConsumer.getListenerContainerFactory());
         log.info("initOtherKafkaConsumer consumerconfig succ :: {}", JsonUtils.toJsonHasNullKey(factory));
         log.info("initOtherKafkaConsumer success! beanName:{},bootstrap.servers:{}", extConsumer.getListenerContainerFactory(), extKafkaProperties.getBootstrapServers());
     }

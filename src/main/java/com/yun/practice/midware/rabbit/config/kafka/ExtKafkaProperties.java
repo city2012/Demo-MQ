@@ -19,6 +19,7 @@ public class ExtKafkaProperties {
     @Data
     public static class Producer{
         private String producerBeanName;
+        private String producerFactory;
     }
 
     @Data

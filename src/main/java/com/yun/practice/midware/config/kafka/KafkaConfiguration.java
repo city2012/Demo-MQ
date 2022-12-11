@@ -44,8 +44,6 @@ public class KafkaConfiguration {
     private KafkaProperties kafkaProperties;
     @Resource
     private ApplicationContext applicationContext;
-    @Resource
-    private KafkaBeanPostProcessor kafkaBeanPostProcessor;
     @Getter
     @Setter
     @Deprecated
@@ -139,13 +137,13 @@ public class KafkaConfiguration {
         kafkaTemplate.setProducerListener(kafkaProducerListener);
         kafkaTemplate.setDefaultTopic(this.kafkaProperties.getTemplate().getDefaultTopic());
         beanFactory.registerSingleton(producerBeanName, kafkaTemplate);
-
+        beanFactory.applyBeanPostProcessorsAfterInitialization(kafkaTemplate, producerBeanName);
 //        beanFactory.addBeanPostProcessor(kafkaBeanPostProcessor);
-        final String factoryName = Optional.ofNullable(extKafkaProperties.getProducer()).map(ExtKafkaProperties.Producer::getProducerFactory).orElse("");
-        if (StringUtils.isNotBlank(factoryName)){
-            beanFactory.registerSingleton(factoryName, producerFactory);
-            beanFactory.applyBeanPostProcessorsAfterInitialization(producerFactory, factoryName);
-        }
+//        final String factoryName = Optional.ofNullable(extKafkaProperties.getProducer()).map(ExtKafkaProperties.Producer::getProducerFactory).orElse("");
+//        if (StringUtils.isNotBlank(factoryName)){
+//            beanFactory.registerSingleton(factoryName, producerFactory);
+//            beanFactory.applyBeanPostProcessorsAfterInitialization(producerFactory, factoryName);
+//        }
         log.info("initOtherKafkaProducer success! beanName:{},bootstrap.servers:{}", producerBeanName, extKafkaProperties.getBootstrapServers());
     }
 

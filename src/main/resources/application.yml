@@ -117,6 +117,10 @@ kafka:
           listener-container-factory: notifyListenerContainerFactory
           listener-group-id: notify-group-service
           listener-batch: true
+      cross:
+        bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
+        producer:
+          producer-bean-name: crossKafkaTemplate
     others:
       - bootstrap-servers: 192.168.3.74:10092,192.168.3.74:10093,192.168.3.74:10094
         producer-bean-name: notifyKafkaTemplate

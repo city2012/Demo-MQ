@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import java.lang.reflect.Field;
@@ -30,11 +31,32 @@ public class KafkaBeanPostProcessor implements BeanPostProcessor {
         if (bean instanceof KafkaListenerContainerFactory){
             final KafkaListenerContainerFactory containerFactory = (KafkaListenerContainerFactory) bean;
             return processListnerFactory(containerFactory);
-        }else if (bean instanceof ProducerFactory){
-            final ProducerFactory producerFactory = (ProducerFactory) bean;
-            return processProducerFactory(producerFactory);
+        }
+//        else if (bean instanceof ProducerFactory){
+//            final ProducerFactory producerFactory = (ProducerFactory) bean;
+//            return processProducerFactory(producerFactory);
+//        }
+        else if(bean instanceof KafkaTemplate){
+            return processKafkaTemplate((KafkaTemplate) bean);
         }
         return bean;
+    }
+
+    private ProducerFactory processKafkaTemplate(KafkaTemplate kafkaTemplate) {
+
+        final ProducerFactory producerFactory = kafkaTemplate.getProducerFactory();
+        final Field configsField = getDeclaredField(producerFactory, "configs");
+        try {
+            configsField.setAccessible(true);
+            final Map<String, Object> configs = (Map<String, Object>) configsField.get(producerFactory);
+            final List<String> interceptors = new ArrayList<>();
+            interceptors.add(GreyProducerInterceptor.class.getName());
+            configs.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, interceptors);
+
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+        return producerFactory;
     }
 
     private ProducerFactory processProducerFactory(ProducerFactory producerFactory) {

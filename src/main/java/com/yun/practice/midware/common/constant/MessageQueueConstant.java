@@ -28,4 +28,5 @@ public class MessageQueueConstant {
 
     public static final String KAFKA_NOTIFY_TOPIC="mq-kafka-topic-notifier";
 
+    public static final String KAFKA_CROSS_TOPIC="kafka_cross_topic";
 }

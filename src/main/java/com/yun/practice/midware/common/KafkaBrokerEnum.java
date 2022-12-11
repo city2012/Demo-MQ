@@ -22,6 +22,11 @@ public enum KafkaBrokerEnum {
      * GROWTH broker bootstrap servers
      */
     NOTIFY("notifyKafkaTemplate"),
+
+    /**
+     * CROSS broker bootstrap servers
+     */
+    CROSS("crossKafkaTemplate"),
     ;
 
     private String kafkaSiteName;
